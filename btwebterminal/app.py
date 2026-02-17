@@ -11,7 +11,7 @@ def main():
     """The main entrypoint
     """
 
-    parser = argparse.ArgumentParser(description="bertdotbill WebTerminal - A websocket-based shell session handler")
+    parser = argparse.ArgumentParser(description="btwebterminal - A websocket-based shell session handler")
 
     parser.add_argument('--host',
                         default=os.environ.get('WEBTERMINAL_HOST', '0.0.0.0'),

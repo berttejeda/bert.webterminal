@@ -3,7 +3,7 @@ import tornado.ioloop
 from btwebterminal.spyder_terminal.server.common import create_app
 
 from btwebterminal.logger import Logger
-logger = Logger().init_logger(__name__)
+logger = Logger().init_logger(None)
 
 class WebTerminal:
 
