@@ -1,8 +1,8 @@
 import tornado.web
 import tornado.ioloop
-from bertdotbillwebterminal.spyder_terminal.server.common import create_app
+from btwebterminal.spyder_terminal.server.common import create_app
 
-from bertdotbillwebterminal.logger import Logger
+from btwebterminal.logger import Logger
 logger = Logger().init_logger(__name__)
 
 class WebTerminal:
@@ -10,15 +10,13 @@ class WebTerminal:
     def __init__(self):
       pass
 
-    def start(self, host, port):
-        clr = 'cls'
-        webterminal_shell_name = 'bash'
+    def start(self, host, port, shell='/bin/bash', debug=False):
         logger.info(f'Server is now at: {host}:{port}')
-        logger.info(f'Shell: {webterminal_shell_name}')
-        application = create_app('/bin/bash',
-                                 debug=False,
-                                 serve_traceback=None,
-                                 autoreload=None)
+        logger.info(f'Shell: {shell}')
+        application = create_app(shell,
+                                 debug=debug,
+                                 serve_traceback=debug,
+                                 autoreload=debug)
         ioloop = tornado.ioloop.IOLoop.instance()
         application.listen(port, address=host)
         try:

@@ -3,8 +3,8 @@
 
 import tornado
 import os.path
-import bertdotbillwebterminal.spyder_terminal.server.routes as routes
-from bertdotbillwebterminal.spyder_terminal.server.logic.term_manager import TermManager
+import btwebterminal.spyder_terminal.server.routes as routes
+from btwebterminal.spyder_terminal.server.logic.term_manager import TermManager
 
 
 def create_app(shell, close_future=None, **kwargs):

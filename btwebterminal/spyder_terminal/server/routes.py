@@ -15,9 +15,9 @@ For more information regarding routing URL and valid regular expressions
 visit: http://www.tornadoweb.org/en/stable/guide/structure.html
 """
 
-import bertdotbillwebterminal.spyder_terminal.server.web as web
-import bertdotbillwebterminal.spyder_terminal.server.rest as rest
-import bertdotbillwebterminal.spyder_terminal.server.websockets as websockets
+import btwebterminal.spyder_terminal.server.web as web
+import btwebterminal.spyder_terminal.server.rest as rest
+import btwebterminal.spyder_terminal.server.websockets as websockets
 
 # Define new rest associations
 REST = [

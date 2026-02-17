@@ -11,6 +11,9 @@ import tornado.ioloop
 from terminado.management import TermManagerBase, PtyWithClients
 from urllib.parse import unquote
 
+import logging
+LOGGER = logging.getLogger(__name__)
+
 WINDOWS = os.name == 'nt'
 
 
@@ -35,6 +38,7 @@ class PtyReader(PtyWithClients):
 
         rows, cols = self.ptyproc.getwinsize()
         if (rows, cols) != (minrows, mincols):
+            LOGGER.debug("Resizing PTY to {0}x{1}".format(mincols, minrows))
             self.ptyproc.setwinsize(minrows, mincols)
 
 
@@ -54,6 +58,7 @@ class TermManager(TermManagerBase):
         argv = options['shell_command']
         env = self.make_term_env(**options)
         cwd = options.get('cwd', None)
+        LOGGER.debug("Spawning new terminal: {0} in {1}".format(argv, cwd))
         return PtyReader(argv, env, cwd)
 
     @tornado.gen.coroutine
@@ -75,14 +80,22 @@ class TermManager(TermManagerBase):
     @tornado.gen.coroutine
     def create_term(self, rows, cols, cwd=None):
         """Create a new virtual terminal."""
+        LOGGER.debug("create_term called with rows={0}, cols={1}, cwd={2}".format(rows, cols, cwd))
         pid = hashlib.md5(str(time.time()).encode('utf-8')).hexdigest()[0:6]
         # We need to do percent decoding for reading the cwd through a cookie
         # For further information see spyder-ide/spyder-terminal#225
         cwd = unquote(cwd)
-        pty = self.new_terminal(cwd=cwd, height=rows, width=cols)
-        pty.resize_to_smallest(rows, cols)
-        self.consoles[pid] = pty
-        return pid
+        LOGGER.debug("Decoded CWD: {0}".format(cwd))
+        
+        try:
+            pty = self.new_terminal(cwd=cwd, height=rows, width=cols)
+            pty.resize_to_smallest(rows, cols)
+            self.consoles[pid] = pty
+            LOGGER.info("Terminal created with PID {0} for CWD {1}".format(pid, cwd))
+            return pid
+        except Exception as e:
+            LOGGER.error("Error in TermManager.create_term: {0}".format(str(e)), exc_info=True)
+            raise
 
     @tornado.gen.coroutine
     def start_term(self, pid, socket):
