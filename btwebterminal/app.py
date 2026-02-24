@@ -23,8 +23,8 @@ def main():
                         help='Port to listen on (default: 10001 or WEBTERMINAL_PORT env var)')
 
     parser.add_argument('--shell',
-                        default=os.environ.get('WEBTERMINAL_SHELL', '/bin/bash'),
-                        help='Shell to spawn (default: /bin/bash or WEBTERMINAL_SHELL env var)')
+                        default=os.environ.get('WEBTERMINAL_SHELL'),
+                        help='Shell to spawn, can also be set with WEBTERMINAL_SHELL env var')
 
     parser.add_argument('--debug',
                         action='store_true',
