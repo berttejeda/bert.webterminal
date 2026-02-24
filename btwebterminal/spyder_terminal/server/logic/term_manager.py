@@ -57,19 +57,20 @@ class TermManager(TermManagerBase):
         options['shell_command'] = self.shell_command
         options.update(kwargs)
         argv = options['shell_command']
-        
-        # Convert list to string for terminado if needed
-        if isinstance(argv, list):
-            # Flatten and ensure all items are strings
+
+        # Ensure argv is a list for terminado/ptyprocess
+        if isinstance(argv, str):
+            argv = [argv]
+        elif isinstance(argv, list):
+            # Flatten nested lists
             flat_argv = []
             for item in argv:
                 if isinstance(item, list):
                     flat_argv.extend(str(i) for i in item)
                 else:
                     flat_argv.append(str(item))
-            # Use shlex.quote() for proper shell escaping on Windows
-            argv = ' '.join(shlex.quote(arg) for arg in flat_argv)
-        
+            argv = flat_argv
+
         env = self.make_term_env(**options)
         cwd = options.get('cwd', None)
         LOGGER.debug("Spawning new terminal: {0} in {1}".format(argv, cwd))
